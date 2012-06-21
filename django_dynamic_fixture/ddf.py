@@ -361,7 +361,10 @@ class DynamicFixture(object):
         else:
             if self.debug_mode:
                 LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), field.name, data))
-            setattr(instance, field.name, data) # Model.field = data
+            try:
+                setattr(instance, field.name, data) # Model.field = data
+            except ValueError:
+                setattr(instance, "%s_id" % field.name, data)
         self.fields_processed.append(field.name)
 
     def _validate_kwargs(self, model_class, kwargs):
